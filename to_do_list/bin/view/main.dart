@@ -49,22 +49,38 @@ void main(List<String> args) {
         }
         break;
       case 3:
-        int index = taskListObj.chooseTask();
-        bool isDone = taskListObj.isDoneSwitch(taskListObj.taskList[index - 1]);
-        taskListObj.taskList[index - 1].isDone = isDone;
-        if (isDone) {
-          color('this task is done...', front: Styles.BG_BLUE, isBold: true);
-        }
-        if (isContinue(
-            '''Do you want to choose another option or exit from TO-DO-LIST,
+        if (taskListObj.taskList.isEmpty) {
+          color('No tasks to switch ', front: Styles.BG_RED, isBold: true);
+          if (isContinue(
+              '''Do you want to choose another option or exit from TO-DO-LIST,
                   1- Exit from TO-DO-LIST.
                   2- Continue.''')) {
-          continue;
+            continue;
+          } else {
+            taskListObj.writeToFile();
+            taskListObj.endScreen();
+            finsh = false;
+          }
         } else {
-          taskListObj.writeToFile();
-          taskListObj.endScreen();
-          finsh = false;
+          int index = taskListObj.chooseTask();
+          bool isDone =
+              taskListObj.isDoneSwitch(taskListObj.taskList[index - 1]);
+          taskListObj.taskList[index - 1].isDone = isDone;
+          if (isDone) {
+            color('this task is done...', front: Styles.BG_BLUE, isBold: true);
+          }
+          if (isContinue(
+              '''Do you want to choose another option or exit from TO-DO-LIST,
+                  1- Exit from TO-DO-LIST.
+                  2- Continue.''')) {
+            continue;
+          } else {
+            taskListObj.writeToFile();
+            taskListObj.endScreen();
+            finsh = false;
+          }
         }
+
         break;
       case 4:
         taskListObj.removeTask();
@@ -80,7 +96,13 @@ void main(List<String> args) {
         }
         break;
       case 5:
-        int taskNumber = taskListObj.chooseTask();
+        if (taskListObj.taskList.isEmpty) {
+          color(
+            'No tasks to update.             ',
+            front: Styles.BG_RED,
+            isBold: true,
+          );
+        } else {      int taskNumber = taskListObj.chooseTask();
         while (updateFinsh) {
           switch (taskListObj.showUpdateListAndReturnChoice()) {
             case 1:
@@ -150,7 +172,8 @@ void main(List<String> args) {
                 isBold: true,
               );
           }
-        }
+        }}
+  
         if (isContinue(
             '''Do you want to choose another option or exit from TO-DO-LIST,
                   1- Exit from TO-DO-LIST.
@@ -165,7 +188,7 @@ void main(List<String> args) {
 
       default:
         color(
-          'This option was not found...             ',
+          'This option was not found...Try again.            ',
           front: Styles.BG_RED,
           isBold: true,
         );
